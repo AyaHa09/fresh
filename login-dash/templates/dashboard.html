@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SafeLink: Dashboard</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f0faff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .dashboard {
+      background-color: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+      color: #333;
+      max-width: 600px;
+      width: 100%;
+    }
+
+    .dashboard h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .prisoner {
+      margin-bottom: 20px;
+      padding: 10px;
+      border-radius: 8px;
+      background-color: #f0f0f0;
+    }
+
+    .prisoner h2 {
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+
+    .prisoner p {
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="dashboard">
+    <h1>Prisoner Information</h1>
+    <div id="prisoners-container">
+      <!-- Example for two prisoners -->
+      <div class="prisoner">
+        <h2>Prisoner 1</h2>
+        <p>Name: John Doe</p>
+        <p>Latitude: 37.7749</p>
+        <p>Longitude: -122.4194</p>
+      </div>
+      <div class="prisoner">
+        <h2>Prisoner 2</h2>
+        <p>Name: Jane Smith</p>
+        <p>Latitude: 40.7128</p>
+        <p>Longitude: -74.006</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Function to fetch prisoner information from the server and update the dashboard
+    function updateDashboard() {
+      // Make an AJAX request to fetch prisoner information
+      fetch('/get_prisoners')
+        .then(response => response.json())
+        .then(prisoners => {
+          const prisonersContainer = document.getElementById('prisoners-container');
+          prisonersContainer.innerHTML = ''; // Clear previous prisoner information
+
+          prisoners.forEach(prisoner => {
+            // Create HTML elements for each prisoner and append them to the container
+            const prisonerDiv = document.createElement('div');
+            prisonerDiv.classList.add('prisoner');
+            prisonerDiv.innerHTML = `
+              <h2>${prisoner.name}</h2>
+              <p>Latitude: ${prisoner.latitude}</p>
+              <p>Longitude: ${prisoner.longitude}</p>
+            `;
+            prisonersContainer.appendChild(prisonerDiv);
+          });
+        })
+        .catch(error => console.error('Error fetching prisoner information:', error));
+    }
+
+    // Call the updateDashboard function initially and then every 5 seconds
+    updateDashboard();
+    setInterval(updateDashboard, 5000); // Update every 5 seconds
+  </script>
+</body>
+</html>
